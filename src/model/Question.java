@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Question implements IQuestion {
     private String questionText;
-    private List<IAnswer> answers;
+    private List<Answer> answers;
 
-    public Question(String questionText, List<IAnswer> answers) {
+    public Question(String questionText, List<Answer> answers) {
         this.questionText = questionText;
         this.answers = answers;
     }
@@ -18,7 +18,7 @@ public class Question implements IQuestion {
 
     @Override
     public List<IAnswer> getAnswers() {
-        return answers;
+        return List.copyOf(answers);
     }
 
     public boolean isCorrectAnswer(int index) {
