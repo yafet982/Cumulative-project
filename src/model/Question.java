@@ -2,26 +2,29 @@ package model;
 
 import java.util.List;
 
-public class Question {
+public class Question implements IQuestion {
     private String questionText;
-    private List<Answer> answers;
-    private int correctIndex;
+    private List<IAnswer> answers;
 
-    public Question(String questionText, List<Answer> answers, int correctIndex) {
+    public Question(String questionText, List<IAnswer> answers) {
         this.questionText = questionText;
         this.answers = answers;
-        this.correctIndex = correctIndex;
     }
 
+    @Override
     public String getQuestionText() {
         return questionText;
     }
 
-    public List<Answer> getAnswers() {
+    @Override
+    public List<IAnswer> getAnswers() {
         return answers;
     }
 
-    public boolean isCorrect(int chosenIndex) {
-        return chosenIndex == correctIndex;
+    public boolean isCorrectAnswer(int index) {
+        if (index < 0 || index >= answers.size()) {
+            return false;
+        }
+        return answers.get(index).isCorrect();
     }
 }

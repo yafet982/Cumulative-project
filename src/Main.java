@@ -1,91 +1,61 @@
+import model.IAnswer;
+import model.IQuestion;
 import model.Answer;
 import model.Question;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        List<Question> questions = new ArrayList<>();
 
-        questions.add(new Question(
+        IAnswer a1 = new Answer("Paris", true);
+        IAnswer a2 = new Answer("London", false);
+        IAnswer a3 = new Answer("Rome", false);
+
+        IQuestion q1 = new Question(
                 "What is the capital of France?",
-                List.of(
-                        new Answer("Paris"),
-                        new Answer("London"),
-                        new Answer("Berlin"),
-                        new Answer("Madrid")
-                ),
-                0
-        ));
+                List.of(a1, a2, a3)
+        );
 
-        questions.add(new Question(
-                "Which number is even?",
-                List.of(
-                        new Answer("3"),
-                        new Answer("7"),
-                        new Answer("10"),
-                        new Answer("9")
-                ),
-                2
-        ));
+        IAnswer b1 = new Answer("3", false);
+        IAnswer b2 = new Answer("4", true);
+        IAnswer b3 = new Answer("5", false);
 
-        questions.add(new Question(
-                "Which language is commonly used for Android apps?",
-                List.of(
-                        new Answer("Java"),
-                        new Answer("HTML"),
-                        new Answer("CSS"),
-                        new Answer("SQL")
-                ),
-                0
-        ));
+        IQuestion q2 = new Question(
+                "What is 2 + 2?",
+                List.of(b1, b2, b3)
+        );
 
-        questions.add(new Question(
-                "Which one is an ocean?",
-                List.of(
-                        new Answer("Sahara"),
-                        new Answer("Pacific"),
-                        new Answer("Alps"),
-                        new Answer("Amazon")
-                ),
-                1
-        ));
+        List<IQuestion> quiz = List.of(q1, q2);
 
         Scanner scanner = new Scanner(System.in);
         int score = 0;
 
-        for (int i = 0; i < questions.size(); i++) {
-            Question q = questions.get(i);
-            System.out.println("Question " + (i + 1) + ": " + q.getQuestionText());
+        for (IQuestion q : quiz) {
+            System.out.println(q.getQuestionText());
+            List<IAnswer> answers = q.getAnswers();
 
-            List<Answer> answers = q.getAnswers();
-            for (int j = 0; j < answers.size(); j++) {
-                System.out.println((j + 1) + ") " + answers.get(j).getText());
+            for (int i = 0; i < answers.size(); i++) {
+                System.out.println((i + 1) + ". " + answers.get(i).getText());
             }
 
-            System.out.print("Your answer (1-" + answers.size() + "): ");
-            int choice;
-            try {
-                choice = Integer.parseInt(scanner.nextLine()) - 1;
-            } catch (NumberFormatException e) {
-                choice = -1;
-            }
+            System.out.print("Choose the correct answer (1-" + answers.size() + "): ");
+            int userChoice = scanner.nextInt();
+            int index = userChoice - 1;
 
-            if (choice >= 0 && choice < answers.size()) {
-                if (q.isCorrect(choice)) {
-                    System.out.println("Correct!\n");
+            if (q instanceof Question) {
+                if (((Question) q).isCorrectAnswer(index)) {
+                    System.out.println("Correct!");
                     score++;
                 } else {
-                    System.out.println("Wrong.\n");
+                    System.out.println("Wrong!");
                 }
-            } else {
-                System.out.println("Invalid answer.\n");
             }
+
+            System.out.println();
         }
 
-        System.out.println("Quiz finished. You scored " + score + " out of " + questions.size() + ".");
-        scanner.close();
+        System.out.println("Quiz finished. Your score: " + score + " out of " + quiz.size());
     }
 }
